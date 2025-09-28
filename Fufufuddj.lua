@@ -19,8 +19,7 @@ local function getServers(limit)
         if success and result and result.data then
             for _, s in ipairs(result.data) do
                 if s.id ~= game.JobId and s.maxPlayers then
-                    -- 👇 สุ่มจำนวนคนแทน
-                    s.playing = math.random(0, s.maxPlayers)
+                    s.playing = math.random(0, s.maxPlayers) -- 👈 สุ่มจำนวนคน
                     table.insert(servers, s)
                 end
             end
@@ -49,7 +48,7 @@ local function refreshServers(listFrame)
     task.spawn(function()
         local servers
         repeat
-            servers = getServers(100) -- โหลด 100 เซิร์ฟ
+            servers = getServers(100)
             if #servers == 0 then task.wait(2) end
         until #servers > 0
 
@@ -113,6 +112,7 @@ mainFrame.Size = UDim2.new(0, 1000, 0, 220)
 mainFrame.Position = UDim2.new(0.5, -500, 0.5, -110)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
 mainFrame.BorderSizePixel = 0
+mainFrame.Visible = true
 mainFrame.Parent = screenGui
 
 -- Title
@@ -148,6 +148,21 @@ refreshBtn.Parent = screenGui
 
 refreshBtn.MouseButton1Click:Connect(function()
     refreshServers(scrollFrame)
+end)
+
+-- ✅ ปุ่มเล็กมุมขวาบนเปิดปิดแผง
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Size = UDim2.new(0, 30, 0, 30)
+toggleBtn.Position = UDim2.new(1, -35, 0, 5)
+toggleBtn.Text = "≡"
+toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
+toggleBtn.TextColor3 = Color3.new(1,1,1)
+toggleBtn.Font = Enum.Font.GothamBold
+toggleBtn.TextSize = 18
+toggleBtn.Parent = screenGui
+
+toggleBtn.MouseButton1Click:Connect(function()
+    mainFrame.Visible = not mainFrame.Visible
 end)
 
 -- โหลดครั้งแรก
